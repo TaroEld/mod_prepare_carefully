@@ -1,8 +1,9 @@
+var PrepareCarefully = {};
 
-var TacticalScreenTopbarRoundInformationModule_createDIV = TacticalScreenTopbarRoundInformationModule.prototype.createDIV;
+PrepareCarefully.createDIV = TacticalScreenTopbarRoundInformationModule.prototype.createDIV;
 TacticalScreenTopbarRoundInformationModule.prototype.createDIV = function(_parentDiv)
 {
-	TacticalScreenTopbarRoundInformationModule_createDIV.call(this, _parentDiv);
+	PrepareCarefully.createDIV.call(this, _parentDiv);
 	var self = this;
 	this.mStartBattleContainer = $('<div class="prepare-for-battle-button-container"/>');
 	this.mContainer.append(this.mStartBattleContainer);
@@ -12,10 +13,10 @@ TacticalScreenTopbarRoundInformationModule.prototype.createDIV = function(_paren
 	}, null, 4)
 }
 
-var TacticalScreenTopbarRoundInformationModule_update = TacticalScreenTopbarRoundInformationModule.prototype.update;
+PrepareCarefully.update = TacticalScreenTopbarRoundInformationModule.prototype.update;
 TacticalScreenTopbarRoundInformationModule.prototype.update = function (_data)
 {
-	TacticalScreenTopbarRoundInformationModule_update.call(this, _data);
+	PrepareCarefully.update.call(this, _data);
 	if ("PrepareCarefullyMode" in _data && _data.PrepareCarefullyMode )
 	{
 		this.mStartBattleContainer.addClass("display-block").removeClass("display-none");
