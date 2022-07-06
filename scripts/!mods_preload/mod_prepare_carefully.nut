@@ -235,6 +235,10 @@
 				tile.clear(this.Const.Tactical.DetailFlag.SpecialOverlay);
 			}
 			::PrepareCarefully.Clear();
+			foreach (bro in this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player))
+			{
+				bro.updateVisibilityForFaction();
+			}
 		}
 	})
 })
