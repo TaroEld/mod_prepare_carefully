@@ -3,6 +3,7 @@
 	Name = "Prepare Carefully",
 	Version = "0.9.1",
 	PrepareCarefullyMode = false,
+	PlayerDeploymentType = null,
 	CurrentlySelectedBro = null,
 	MaxVertical = 2,
 	MaxHorizontal = 2,
@@ -10,6 +11,25 @@
 		AsString = [],
 		AsTuple = [],
 	},
+	Clear = function()
+	{
+		this.PrepareCarefullyMode = false;
+		this.CurrentlySelectedBro = null;
+		this.PlayerDeploymentType = null;
+		this.ValidTiles = {
+			AsString = [],
+			AsTuple = [],
+		};
+		local playerUnits = ::World.getPlayerRoster().getAll();
+		foreach (idx, bro in playerUnits)
+		{
+			if("old_updateVisibility" in bro)
+			{
+				bro.updateVisibility = bro.old_updateVisibility;
+				delete bro.old_updateVisibility;
+			}
+		}
+	}
 }
 ::mods_registerMod(::PrepareCarefully.ID, ::PrepareCarefully.Version);
 
@@ -48,10 +68,20 @@
 	})
 
 	::mods_hookExactClass("states/tactical_state", function(o){
-		local init = o.init;
-		o.init = function()
+		local onFinish = o.onFinish;
+		o.onFinish = function()
 		{
-			init();
+			onFinish();
+			::PrepareCarefully.Clear();
+		}
+
+		local initMap = o.initMap;
+		o.initMap = function()
+		{
+			initMap();
+			local properties = this.getStrategicProperties();
+			::PrepareCarefully.PrepareCarefullyMode = properties.IsPlayerInitiated;
+			::PrepareCarefully.PlayerDeploymentType = properties.PlayerDeploymentType;
 			if (::PrepareCarefully.PrepareCarefullyMode)
 			{
 				this.getValidPrepareCarefullyTiles();
@@ -59,29 +89,12 @@
 			}
 		}
 
-		local onFinish = o.onFinish;
-		o.onFinish = function()
-		{
-			onFinish();
-			::PrepareCarefully.PrepareCarefullyMode = false;
-			::PrepareCarefully.CurrentlySelectedBro = null;
-			::PrepareCarefully.ValidTiles = {
-				AsString = [],
-				AsTuple = [],
-			};
-		}
-
-		local setStrategicProperties = o.setStrategicProperties;
-		o.setStrategicProperties = function(_properties)
-		{
-			setStrategicProperties(_properties);
-			::PrepareCarefully.PrepareCarefullyMode = _properties.IsPlayerInitiated;
-		}
-
 		o.getValidPrepareCarefullyTiles <- function()
 		{
 			local minX, maxX, minY, maxY;
 			local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
+			local playerDeploymentType = ::PrepareCarefully.PlayerDeploymentType;
+			local ambushMode = playerDeploymentType == this.Const.Tactical.DeploymentType.Circle || playerDeploymentType == this.Const.Tactical.DeploymentType.Center;
 			foreach (bro in playerUnits)
 			{
 				local tile = bro.getTile();
@@ -90,9 +103,10 @@
 				if (minY == null || tile.SquareCoords.Y < minY) minY = tile.SquareCoords.Y;
 				if (maxY == null || tile.SquareCoords.Y > maxY) maxY = tile.SquareCoords.Y;
 			}
-			minX = minX - ::PrepareCarefully.MaxHorizontal;
-			minY = minY - ::PrepareCarefully.MaxVertical;
-			maxY = maxY + ::PrepareCarefully.MaxVertical;
+			minX = minX - (ambushMode ? 1 : ::PrepareCarefully.MaxHorizontal);
+			maxX = maxX + (ambushMode ? 1 : 0);
+			minY = minY - (ambushMode ? 1 : ::PrepareCarefully.MaxVertical);
+			maxY = maxY + (ambushMode ? 1 : ::PrepareCarefully.MaxVertical);
 
 			for( local x = minX; x != maxX + 1; x++ )
 			{
@@ -112,10 +126,11 @@
 			local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
 			foreach (bro in playerUnits)
 			{
+
 				bro.old_updateVisibility <- bro.updateVisibility;
 				bro.updateVisibility = function(_tile, _vision, _faction)
 				{
-					return old_updateVisibility(_tile, 2, _faction)
+					return this.old_updateVisibility(_tile, 2, _faction)
 				}
 			}
 			foreach(bro in playerUnits)
@@ -211,32 +226,15 @@
 		}
 	})
 
-	// ::mods_hookExactClass("ui/screens/tactical/modules/turn_sequence_bar/turn_sequence_bar", function(o){
-	// 	local initNextTurn = o.initNextTurn;
-	// 	o.initNextTurn = function(_force = false)
-	// 	{
-	// 		if (::PrepareCarefully.PrepareCarefullyMode)
-	// 			return;
-	// 		return initNextTurn(_force);
-	// 	}
-	// })
-
 	::mods_hookNewObject("ui/screens/tactical/tactical_screen", function(o){
 		o.onPrepareCarefullyButtonPressed <- function()
 		{
-			::PrepareCarefully.PrepareCarefullyMode = false;
 			foreach(tuple in ::PrepareCarefully.ValidTiles.AsTuple)
 			{
 				local tile = this.Tactical.getTileSquare(tuple[0], tuple[1]);
 				tile.clear(this.Const.Tactical.DetailFlag.SpecialOverlay);
 			}
-			local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
-			foreach (idx, bro in playerUnits)
-			{
-				bro.updateVisibility = bro.old_updateVisibility;
-				delete bro.old_updateVisibility;
-				bro.updateVisibilityForFaction();
-			}
+			::PrepareCarefully.Clear();
 		}
 	})
 })
