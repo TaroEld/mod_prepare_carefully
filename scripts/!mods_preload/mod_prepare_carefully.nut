@@ -1,7 +1,7 @@
 ::PrepareCarefully <- {
 	ID = "mod_prepare_carefully",
 	Name = "Prepare Carefully",
-	Version = "1.0.0",
+	Version = "0.9.1",
 	PrepareCarefullyMode = false,
 	CurrentlySelectedBro = null,
 	MaxVertical = 2,
@@ -91,11 +91,9 @@
 				if (maxY == null || tile.SquareCoords.Y > maxY) maxY = tile.SquareCoords.Y;
 			}
 			minX = minX - ::PrepareCarefully.MaxHorizontal;
-			// maxX++;
 			minY = minY - ::PrepareCarefully.MaxVertical;
 			maxY = maxY + ::PrepareCarefully.MaxVertical;
 
-			::logInfo("minX : " + minX + "maxX : " + maxX + "minY : " + minY + "maxY : " + maxY)
 			for( local x = minX; x != maxX + 1; x++ )
 			{
 				for( local y = minY; y != maxY + 1; y++ )
