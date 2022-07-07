@@ -122,7 +122,20 @@
 
 		o.denyVisibilityPrepareCarefully <- function()
 		{
+			local tile;
 			this.Tactical.clearVisibility();
+			foreach(tuple in ::PrepareCarefully.ValidTiles.AsTuple)
+			{
+				tile = this.Tactical.getTileSquare(tuple[0], tuple[1]);
+				tile.addVisibilityForFaction(this.Const.Faction.Player);
+				for( local j = 0; j < 6; j++ )
+				{
+					if (tile.hasNextTile(j))
+					{
+						tile.getNextTile(j).addVisibilityForFaction(this.Const.Faction.Player);
+					}
+				}
+			}
 			local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
 			foreach (bro in playerUnits)
 			{
@@ -130,12 +143,8 @@
 				bro.old_updateVisibility <- bro.updateVisibility;
 				bro.updateVisibility = function(_tile, _vision, _faction)
 				{
-					return this.old_updateVisibility(_tile, 2, _faction)
+					return this.old_updateVisibility(_tile, 0, _faction)
 				}
-			}
-			foreach(bro in playerUnits)
-			{
-				bro.updateVisibilityForFaction()
 			}
 		}
 
