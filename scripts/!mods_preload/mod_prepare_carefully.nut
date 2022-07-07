@@ -212,7 +212,7 @@
 		local turnsequencebar_onNextRound = o.turnsequencebar_onNextRound;
 		o.turnsequencebar_onNextRound = function( _round )
 		{
-			if(::PrepareCarefully.PrepareCarefullyMode)
+			if (::PrepareCarefully.PrepareCarefullyMode)
 			{
 				local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
 				foreach(bro in playerUnits)
@@ -244,10 +244,22 @@
 				tile.clear(this.Const.Tactical.DetailFlag.SpecialOverlay);
 			}
 			::PrepareCarefully.Clear();
+			this.Tactical.fillVisibility(this.Const.Faction.Player, false);
 			foreach (bro in this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player))
 			{
 				bro.updateVisibilityForFaction();
 			}
+		}
+	})
+
+	::mods_hookNewObject("ui/screens/tactical/modules/turn_sequence_bar/turn_sequence_bar", function(o)
+	{
+		local entityWaitTurn = o.entityWaitTurn;
+		o.entityWaitTurn = function(_entity)
+		{
+			if (::PrepareCarefully.PrepareCarefullyMode)
+				return false;
+			return entityWaitTurn(_entity);
 		}
 	})
 })
