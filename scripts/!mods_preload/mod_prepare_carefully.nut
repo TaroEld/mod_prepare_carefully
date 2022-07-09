@@ -25,10 +25,22 @@
 		Details = [],
 	},
 	InvalidTraits = [
-		"trait.clubfooted"
+		"trait.clubfooted",
+		"trait.clumsy",
+		"trait.hesitant",
+		"background.cripple",
 	],
 	ExtraValidTraits = [
-		"trait.quick"
+		"trait.weasel",
+		"trait.athletic",
+		"trait.quick",
+		"trait.sure_footing",
+		"trait.impatient",
+		"trait.swift",
+		"trait.fat",
+		"background.poacher",
+		"background.hunter",
+		"background.thief",
 	],
 
 	// BRO DEPENDANT FUNCTIONS
