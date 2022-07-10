@@ -28,6 +28,7 @@
 		"trait.clubfooted",
 		"trait.clumsy",
 		"trait.hesitant",
+		"trait.fat",
 		"background.cripple",
 	],
 	ExtraValidTraits = [
@@ -37,7 +38,6 @@
 		"trait.sure_footing",
 		"trait.impatient",
 		"trait.swift",
-		"trait.fat",
 		"background.poacher",
 		"background.hunter",
 		"background.thief",
