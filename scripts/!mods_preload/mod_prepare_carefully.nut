@@ -399,16 +399,16 @@
 		local turnsequencebar_onNextRound = o.turnsequencebar_onNextRound;
 		o.turnsequencebar_onNextRound = function( _round )
 		{
+			local ret = turnsequencebar_onNextRound( _round );
 			if (::PrepareCarefully.PrepareCarefullyMode)
 			{
+				::PrepareCarefully.denyVisibility(false);
 				local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
 				foreach(bro in playerUnits)
 				{
 					bro.updateVisibilityForFaction()
 				}
-				return;
 			}
-			return turnsequencebar_onNextRound( _round );
 		}
 	})
 
