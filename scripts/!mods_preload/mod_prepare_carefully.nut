@@ -1,7 +1,7 @@
 ::PrepareCarefully <- {
 	ID = "mod_prepare_carefully",
 	Name = "Prepare Carefully",
-	Version = "0.9.2",
+	Version = "0.9.3",
 	PrepareCarefullyMode = false,
 	PlayerDeploymentType = null,
 	CurrentlySelectedBro = null,
