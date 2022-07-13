@@ -156,7 +156,9 @@
 		{
 			for( local y = minY; y != maxY + 1; y++ )
 			{
-				asString = x + "." +  y
+				if (!this.Tactical.isValidTileSquare(x, y))
+					continue;
+				asString = x + "." +  y;
 				this.ValidTiles.AsString.push(asString);
 				tile = this.Tactical.getTileSquare(x, y);
 				this.ValidTiles.AsTiles.push(tile);
