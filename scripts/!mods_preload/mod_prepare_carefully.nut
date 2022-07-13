@@ -129,7 +129,7 @@
 	}
 	// END BRO FUNCTIONS
 
-	getValidPrepareCarefullyTiles = function()
+	getValidTiles = function()
 	{
 		local minX, maxX, minY, maxY, icon, tile, x, y, asString;
 		local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
@@ -202,7 +202,7 @@
 		}
 	},
 
-	denyVisibilityPrepareCarefully = function()
+	denyVisibility = function(_changeVisibilityFunction = true)
 	{
 		local tile;
 		this.Tactical.clearVisibility();
@@ -211,16 +211,21 @@
 			tile.addVisibilityForFaction(this.Const.Faction.Player);
 		}
 
-		local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
-		foreach (bro in playerUnits)
+		if (_changeVisibilityFunction)
 		{
-			bro.old_updateVisibility <- bro.updateVisibility;
-			bro.updateVisibility = function(_tile, _vision, _faction)
+			local playerUnits = this.Tactical.Entities.getInstancesOfFaction(this.Const.Faction.Player);
+			foreach (bro in playerUnits)
 			{
-				return;
+				bro.old_updateVisibility <- bro.updateVisibility;
+				bro.updateVisibility = function(_tile, _vision, _faction)
+				{
+					return;
+				}
 			}
 		}
+
 	},
+
 	onLeftClickPrepareCarefully = function(_mouseEvent)
 	{
 		local tile = this.Tactical.getTile(this.Tactical.screenToTile(_mouseEvent.getX(), _mouseEvent.getY()));
@@ -275,6 +280,7 @@
 			}
 		}
 	},
+
 	clearVariables = function()
 	{
 		this.PrepareCarefullyMode = false;
@@ -346,13 +352,13 @@
 			::PrepareCarefully.clearVariables();
 			local properties = this.getStrategicProperties();
 			::PrepareCarefully.PrepareCarefullyMode = properties.IsPlayerInitiated;
-			if (this.World.Retinue.hasFollower("follower.lookout"))
-				::PrepareCarefully.PrepareCarefullyMode = true;
+			// if (this.World.Retinue.hasFollower("follower.lookout"))
+			// 	::PrepareCarefully.PrepareCarefullyMode = true;
 			::PrepareCarefully.PlayerDeploymentType = properties.PlayerDeploymentType;
 			if (::PrepareCarefully.PrepareCarefullyMode)
 			{
-				::PrepareCarefully.getValidPrepareCarefullyTiles();
-				::PrepareCarefully.denyVisibilityPrepareCarefully();
+				::PrepareCarefully.getValidTiles();
+				::PrepareCarefully.denyVisibility();
 			}
 		}
 
