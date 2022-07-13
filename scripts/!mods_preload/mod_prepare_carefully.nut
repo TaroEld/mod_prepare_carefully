@@ -431,7 +431,7 @@
 	::mods_hookNewObject("ui/screens/tactical/tactical_screen", function(o){
 		o.onPrepareCarefullyButtonPressed <- function()
 		{
-			foreach (tile in ::PrepareCarefully.ValidTiles.AsTiles)
+			foreach (tile in ::PrepareCarefully.ExtraValidTiles.AsTiles)
 			{
 				tile.clear(this.Const.Tactical.DetailFlag.SpecialOverlay);
 			}
