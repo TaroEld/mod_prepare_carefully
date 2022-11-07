@@ -455,5 +455,13 @@
 			}
 			return entityWaitTurn(_entity);
 		}
+
+		local initNextTurn = o.initNextTurn;
+		o.initNextTurn = function(__force = false)
+		{
+			if (::PrepareCarefully.PrepareCarefullyMode)
+				return;
+			return initNextTurn(__force);
+		}
 	})
 })
