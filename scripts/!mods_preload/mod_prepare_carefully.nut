@@ -162,7 +162,7 @@
 				this.ValidTiles.AsString.push(asString);
 				tile = this.Tactical.getTileSquare(x, y);
 				this.ValidTiles.AsTiles.push(tile);
-				icon = tile.spawnDetail("mortar_target_02", this.Const.Tactical.DetailFlag.SpecialOverlay, false, false);
+				icon = tile.spawnDetail("zone_target_overlay", this.Const.Tactical.DetailFlag.SpecialOverlay, false, false);
 				icon.Color = this.ValidColor;
 				icon.Saturation = 60;
 				this.ValidTiles.Details.push(icon);
@@ -190,7 +190,7 @@
 						this.ExtraValidTiles.AsTiles.push(neighbor);
 						if (this.ValidTiles.AsString.find(asString) == null)
 						{
-							icon = neighbor.spawnDetail("mortar_target_02", this.Const.Tactical.DetailFlag.SpecialOverlay, false, false);
+							icon = neighbor.spawnDetail("zone_target_overlay", this.Const.Tactical.DetailFlag.SpecialOverlay, false, false);
 							icon.Color = this.ValidColor;
 							icon.Saturation = 60;
 							icon.Visible = false;
